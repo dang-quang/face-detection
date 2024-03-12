@@ -96,10 +96,15 @@ void FaceDetector::Detect(cv::Mat& image, std::vector<bbox>& boxes)
     float *ptr = out.channel(0);
     float *ptr1 = out1.channel(0);
     float *landms = out2.channel(0);
+    
+    if (ptr == nullptr || ptr1 == nullptr || landms == nullptr || anchor.empty()) {
+    // Handle error here
+    return;
+    }
 
     // #pragma omp parallel for num_threads(2)
     for(size_t i = 0; i < anchor.size(); ++i){
-        if (*(ptr1+1) > _threshold)
+        if ((ptr1+1) <= &ptr1[anchor.size()-1] && *(ptr1+1) > _threshold)
         {
             box tmp = anchor[i];
             box tmp1;

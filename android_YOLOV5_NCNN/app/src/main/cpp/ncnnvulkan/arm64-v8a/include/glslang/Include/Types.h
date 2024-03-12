@@ -49,7 +49,7 @@
 
 namespace glslang {
 
-const int GlslangMaxTypeLength = 200;  // TODO: need to print block/struct one member per line, so this can stay bounded
+const int GlslangMaxTypeLength = 200;
 
 const char* const AnonymousPrefix = "anon@"; // for something like a block whose members can be directly accessed
 inline bool IsAnonymous(const TString& name)

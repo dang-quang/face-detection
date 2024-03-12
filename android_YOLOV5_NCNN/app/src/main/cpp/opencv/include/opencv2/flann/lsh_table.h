@@ -41,7 +41,6 @@
 #include <iostream>
 #include <iomanip>
 #include <limits.h>
-// TODO as soon as we use C++0x, use the code in USE_UNORDERED_MAP
 #ifdef __GXX_EXPERIMENTAL_CXX0X__
 #  define USE_UNORDERED_MAP 1
 #else
@@ -480,7 +479,6 @@ inline LshStats LshTable<unsigned char>::getStats() const
     stats.bucket_size_min_ = stats.bucket_sizes_.front();
     stats.bucket_size_max_ = stats.bucket_sizes_.back();
 
-    // TODO compute mean and std
     /*float mean, stddev;
        stats.bucket_size_mean_ = mean;
        stats.bucket_size_std_dev = stddev;*/

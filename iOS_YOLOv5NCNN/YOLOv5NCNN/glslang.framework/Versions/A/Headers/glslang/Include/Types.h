@@ -52,7 +52,7 @@ namespace glslang {
 
 class TIntermAggregate;
 
-const int GlslangMaxTypeLength = 200;  // TODO: need to print block/struct one member per line, so this can stay bounded
+const int GlslangMaxTypeLength = 200; 
 
 const char* const AnonymousPrefix = "anon@"; // for something like a block whose members can be directly accessed
 inline bool IsAnonymous(const TString& name)
@@ -2706,7 +2706,6 @@ public:
         }
 
         // Most commonly, they are both nullptr, or the same pointer to the same actual structure
-        // TODO: Why return true when neither types are structures?
         if ((!isStruct() && !right.isStruct()) ||
             (isStruct() && right.isStruct() && structure == right.structure))
             return true;

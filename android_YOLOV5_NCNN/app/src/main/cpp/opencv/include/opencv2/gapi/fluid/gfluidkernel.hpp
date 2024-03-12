@@ -397,7 +397,6 @@ struct FluidCallHelper<Impl, std::tuple<Ins...>, std::tuple<Outs...>, UseScratch
         constexpr bool hasWindow = has_Window<Impl, const int>::value;
 
         // User must provide "init" callback if Window != 1
-        // TODO: move to constexpr if when we enable C++17
         return get_border_helper<callCustomGetBorder<hasWindow, Impl>::value, Impl, Ins...>::help(metas, in_args);
     }
 

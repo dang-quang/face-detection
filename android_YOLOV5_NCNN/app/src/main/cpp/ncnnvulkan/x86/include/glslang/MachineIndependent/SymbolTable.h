@@ -213,7 +213,7 @@ protected:
     TConstUnionArray constArray;               // for compile-time constant value
     TIntermTyped* constSubtree;                // for specialization constant computation
     TVector<TExtensionList>* memberExtensions; // per-member extension list, allocated only when needed
-    int anonId; // the ID used for anonymous blocks: TODO: see if uniqueId could serve a dual purpose
+    int anonId; // the ID used for anonymous blocks:
 };
 
 //

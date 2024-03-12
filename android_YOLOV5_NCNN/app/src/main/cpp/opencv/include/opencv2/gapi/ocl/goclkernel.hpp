@@ -126,7 +126,6 @@ template<class T> struct ocl_get_in
 };
 
 struct tracked_cv_umat{
-    //TODO Think if T - API could reallocate UMat to a proper size - how do we handle this ?
     //tracked_cv_umat(cv::UMat& m) : r{(m)}, original_data{m.getMat(ACCESS_RW).data} {}
     tracked_cv_umat(cv::UMat& m) : r(m), original_data{ nullptr } {}
     cv::UMat &r; // FIXME: It was a value (not a reference) before.
@@ -209,7 +208,6 @@ struct OCLCallHelper<Impl, std::tuple<Ins...>, std::tuple<Outs...> >
     template<int... IIs, int... OIs>
     static void call_impl(GOCLContext &ctx, detail::Seq<IIs...>, detail::Seq<OIs...>)
     {
-        //TODO: Make sure that OpenCV kernels do not reallocate memory for output parameters
         //by comparing it's state (data ptr) before and after the call.
         //Convert own::Scalar to cv::Scalar before call kernel and run kernel
         //convert cv::Scalar to own::Scalar after call kernel and write back results

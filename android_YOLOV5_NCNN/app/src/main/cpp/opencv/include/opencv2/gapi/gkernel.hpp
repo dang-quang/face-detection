@@ -42,7 +42,6 @@ struct GAPI_EXPORTS GKernel
     const GSpecs      inSpecs;    // specs of kernel's inputs (FIXME: below)
     const GShapes     outShapes;  // types (shapes) kernel's outputs
 };
-// TODO: It's questionable if inSpecs should really be here. Instead,
 // this information could come from meta.
 
 // GKernelImpl describes particular kernel implementation to the system
@@ -207,7 +206,6 @@ public:
     using InArgs  = std::tuple<Args...>;
     using OutArgs = std::tuple<R...>;
 
-    // TODO: Args&&... here?
     static std::tuple<R...> on(Args... args)
     {
         cv::GCall call(GKernel{ K::id()
@@ -365,7 +363,6 @@ namespace gapi
     public:
         class Priv;
 
-        // TODO: make it template (call `new` within??)
         GBackend();
         explicit GBackend(std::shared_ptr<Priv> &&p);
 
@@ -603,7 +600,6 @@ namespace gapi {
          */
         std::vector<GBackend> backends() const;
 
-        // TODO: Doxygen bug -- it wants me to place this comment
         // here, not below.
         /**
          * @brief Create a new package based on `lhs` and `rhs`.

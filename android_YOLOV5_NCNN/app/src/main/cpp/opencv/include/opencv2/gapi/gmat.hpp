@@ -16,7 +16,6 @@
 
 #include <opencv2/gapi/own/assert.hpp>
 
-// TODO GAPI_EXPORTS or so
 namespace cv
 {
 // Forward declaration; GNode and GOrigin are an internal

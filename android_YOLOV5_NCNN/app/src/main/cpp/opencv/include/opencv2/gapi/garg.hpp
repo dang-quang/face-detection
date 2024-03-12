@@ -102,7 +102,6 @@ using GRunArg  = util::variant<
     >;
 using GRunArgs = std::vector<GRunArg>;
 
-// TODO: Think about the addition operator
 /**
  * @brief This operator allows to complement the input vector at runtime.
  *
@@ -150,7 +149,6 @@ using GRunArgP = util::variant<
     >;
 using GRunArgsP = std::vector<GRunArgP>;
 
-// TODO: Think about the addition operator
 /**
  * @brief This operator allows to complement the output vector at runtime.
  *

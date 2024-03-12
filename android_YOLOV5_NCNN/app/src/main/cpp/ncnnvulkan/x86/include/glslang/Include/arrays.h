@@ -75,7 +75,6 @@ struct TArraySize {
 //
 struct TSmallArrayVector {
     //
-    // TODO: memory: TSmallArrayVector is intended to be smaller.
     // Almost all arrays could be handled by two sizes each fitting
     // in 16 bits, needing a real vector only in the cases where there
     // are more than 3 sizes or a size needing more than 16 bits.

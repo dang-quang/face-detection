@@ -24,8 +24,6 @@ namespace util
         }
     };
 
-    // TODO: nullopt_t
-
     // Interface ///////////////////////////////////////////////////////////////
     template<typename T> class optional
     {
@@ -38,12 +36,6 @@ namespace util
         explicit optional(T &&value) noexcept;
         explicit optional(const T &value) noexcept;
         optional(optional &&) noexcept;
-        // TODO: optional(nullopt_t) noexcept;
-        // TODO: optional(const optional<U> &)
-        // TODO: optional(optional<U> &&)
-        // TODO: optional(Args&&...)
-        // TODO: optional(initializer_list<U>)
-        // TODO: optional(U&& value);
 
         // Assignment
         optional& operator=(const optional& rhs) = default;
@@ -54,23 +46,19 @@ namespace util
         const T* operator-> () const;
         T& operator* ();
         const T& operator* () const;
-        // TODO: && versions
 
         operator bool() const noexcept;
         bool has_value() const noexcept;
 
         T& value();
         const T& value() const;
-        // TODO: && versions
 
         template<class U>
         T value_or(U &&default_value) const;
 
         void swap(optional &other) noexcept;
         void reset() noexcept;
-        // TODO: emplace
 
-        // TODO: operator==, !=, <, <=, >, >=
 
     private:
         struct nothing {};
@@ -80,7 +68,6 @@ namespace util
     template<class T>
     optional<typename std::decay<T>::type> make_optional(T&& value);
 
-    // TODO: Args... and initializer_list versions
 
     // Implementation //////////////////////////////////////////////////////////
     template<class T> optional<T>::optional(T &&v) noexcept

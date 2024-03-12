@@ -436,7 +436,6 @@ namespace core {
         }
     };
 
-    // TODO: eliminate the need in this kernel (streaming)
     G_TYPED_KERNEL(GCrop, <GMat(GMat, Rect)>, "org.opencv.core.transform.crop") {
         static GMatDesc outMeta(GMatDesc in, Rect rc) {
             return in.withSize(Size(rc.width, rc.height));

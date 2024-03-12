@@ -62,7 +62,6 @@ public:
 
     GProtoArgs m_args;
 
-    // TODO: Think about the addition operator
     /**
      * @brief This operator allows to complement the proto vectors at runtime.
      *
@@ -114,14 +113,12 @@ namespace detail
 
 template<typename... Ts> inline GProtoOutputArgs GOut(const std::tuple<Ts...>& ts)
 {
-    // TODO: think of std::forward(ts)
     return detail::getGOut_impl(ts, typename detail::MkSeq<sizeof...(Ts)>::type());
 }
 
 // Takes rvalue as input arg
 template<typename... Ts> inline GProtoOutputArgs GOut(std::tuple<Ts...>&& ts)
 {
-    // TODO: think of std::forward(ts)
     return detail::getGOut_impl(ts, typename detail::MkSeq<sizeof...(Ts)>::type());
 }
 

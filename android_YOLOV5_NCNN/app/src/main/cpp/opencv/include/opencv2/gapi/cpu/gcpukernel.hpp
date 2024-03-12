@@ -469,7 +469,6 @@ public:
 
 #define GAPI_OCV_KERNEL(Name, API) struct Name: public cv::GCPUKernelImpl<Name, API>
 
-// TODO: Reuse Anatoliy's logic for support of types with commas in macro.
 //       Retrieve the common part from Anatoliy's logic to the separate place.
 #define GAPI_OCV_KERNEL_ST(Name, API, State)                   \
     struct Name: public cv::GCPUStKernelImpl<Name, API, State> \

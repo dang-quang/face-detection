@@ -346,7 +346,6 @@ struct less
 template<typename RandomAccessIter, typename Compare>
 void partial_sort(RandomAccessIter first, RandomAccessIter middle, RandomAccessIter last, Compare comp)
 {
-    // [TODO] heap sort should be used here, but we simply use bubble sort now
     for (RandomAccessIter i = first; i < middle; ++i)
     {
         // bubble sort

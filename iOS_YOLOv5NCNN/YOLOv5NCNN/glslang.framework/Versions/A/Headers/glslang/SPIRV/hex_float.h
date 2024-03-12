@@ -749,8 +749,6 @@ inline bool RejectParseDueToLeadingSign(std::istream& is, bool negate_value,
 // being stored into the value parameter.
 // If the value cannot be correctly parsed or overflows the target floating
 // point type, then set the fail bit on the stream.
-// TODO(dneto): Promise C++11 standard behavior in how the value is set in
-// the error case, but only after all target platforms implement it correctly.
 // In particular, the Microsoft C++ runtime appears to be out of spec.
 template <typename T, typename Traits>
 inline std::istream& ParseNormalFloat(std::istream& is, bool negate_value,
@@ -787,7 +785,6 @@ inline std::istream& ParseNormalFloat(std::istream& is, bool negate_value,
 // being stored into the value parameter.
 // If the value cannot be correctly parsed or overflows the target floating
 // point type, then set the fail bit on the stream.
-// TODO(dneto): Promise C++11 standard behavior in how the value is set in
 // the error case, but only after all target platforms implement it correctly.
 // In particular, the Microsoft C++ runtime appears to be out of spec.
 template <>

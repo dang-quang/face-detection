@@ -84,7 +84,6 @@ public:
     // shader tensor storage
     bool support_tensor_storage;
 
-    // TODO drop these fields
     bool support_weight_fp16_storage;
 
     bool support_reserved_0;

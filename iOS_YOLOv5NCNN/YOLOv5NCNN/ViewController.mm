@@ -333,6 +333,7 @@
         dbFaceResult = self.dbFace->detect(image, self.threshold, self.nms_threshold);
     } else if (self.USE_MODEL == W_FACE_LANDMARK) {
         //faceLandmarkResult = self.faceLandmark->detect(image);
+        NSLog(@"quang debug 1234 ==========>");
         faceLandmarkPoseResult = self.faceLandmarkPose->detect(image);
     } else if (self.USE_MODEL == W_YOLACT) {
         yolactResult = self.yolact->detect_yolact(image);
@@ -342,9 +343,10 @@
         maskMat = self.mbnv3Seg->detect_mbnseg(image);
     } else if (self.USE_MODEL == W_LIGHT_OPENPOSE) {
         humanPose = self.lightOpenpose->detect(image);
-    } else if (self.USE_MODEL == W_FACE_LANDMARK_POSE) {
-        faceLandmarkPoseResult = self.faceLandmarkPose->detect(image);
     }
+    // else if (self.USE_MODEL == W_FACE_LANDMARK_POSE) {
+    //     faceLandmarkPoseResult = self.faceLandmarkPose->detect(image);
+    // }
     
     __weak typeof(self) weakSelf = self;
     dispatch_sync(dispatch_get_main_queue(), ^{
@@ -425,10 +427,11 @@
     } else if (!self.lightOpenpose && self.USE_MODEL == W_LIGHT_OPENPOSE) {
         NSLog(@"new light openpose");
         self.lightOpenpose = new LightOpenPose(self.USE_GPU);
-    } else if (!self.faceLandmarkPose && self.USE_MODEL == W_FACE_LANDMARK_POSE) {
-        NSLog(@"new face-landmark pose");
-        self.faceLandmark = new FaceLandmark(self.USE_GPU);
-    }
+    } 
+    // else if (!self.faceLandmarkPose && self.USE_MODEL == W_FACE_LANDMARK_POSE) {
+    //     NSLog(@"new face-landmark pose");
+    //     self.faceLandmark = new FaceLandmark(self.USE_GPU);
+    // }
 }
 
 - (void)releaseModel {

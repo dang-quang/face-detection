@@ -59,7 +59,7 @@ std::vector<FaceLandmarkPoseResult> FaceLandmarkPose::detect(UIImage *image){
         LandmarkResult lmk_data;
         mHeadPose->Predict(cv_image,face_results[i],pose_data,scale_data);
         mFacialLandmarkDetector->Predict(cv_image,face_results[i],lmk_data);
-        drawResults(cv_image, box_data, pose_data, scale_data, lmk_data);
+        //drawResults(cv_image, box_data, pose_data, scale_data, lmk_data);
         
         FaceLandmarkPoseResult tmp;
         tmp.bbox = face_results[i];
@@ -119,7 +119,8 @@ void FaceLandmarkPose::drawResults(cv::Mat& image, bbox& boxes, PoseValue& pose_
     cv::putText(image, "pitch: "+std::to_string(v_pitch).substr(0, std::to_string(v_pitch).find(".")+3), cv::Point(50, 80), cv::FONT_HERSHEY_DUPLEX, 1.0, CV_RGB(0, 255, 0), 2);
     cv::putText(image, "roll: "+std::to_string(v_roll).substr(0, std::to_string(v_roll).find(".")+3), cv::Point(50, 110), cv::FONT_HERSHEY_DUPLEX, 1.0, CV_RGB(255, 0, 0), 2);
     //cv::Rect draw_box = cv::Rect(boxes[i].x1, boxes[i].y1, boxes[i].x2 - boxes[i].x1, boxes[i].y2 - boxes[i].y1);
-    //cv::rectangle(image, draw_box, cv::Scalar(255,255,0),1,8);
+    cv::Rect draw_box = cv::Rect(boxes.x1, boxes.y1, boxes.x2 - boxes.x1, boxes.y2 - boxes.y1);
+    cv::rectangle(image, draw_box, cv::Scalar(255,255,0),1,8);
     for(int i = 0; i < num_landmarks; i++){
         cv::Point point = cv::Point(lmk_data.landmarks[i]._x,lmk_data.landmarks[i]._y);
         cv::circle(image, point,2,cv::Scalar(0, 0, 255), -1);

@@ -48,7 +48,6 @@ public:
     explicit GCaptureSource(int id) : cap(id) { prep(); }
     explicit GCaptureSource(const std::string &path) : cap(path) { prep(); }
 
-    // TODO: Add more constructor overloads to make it
     // fully compatible with VideoCapture's interface.
 
 protected:

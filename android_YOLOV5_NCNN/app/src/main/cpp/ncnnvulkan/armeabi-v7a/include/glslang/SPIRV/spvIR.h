@@ -412,7 +412,6 @@ public:
     Module() {}
     virtual ~Module()
     {
-        // TODO delete things
     }
 
     void addFunction(Function *fun) { functions.push_back(fun); }
