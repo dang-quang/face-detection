@@ -1,23 +1,18 @@
 #include "FaceLandmarkPose.h"
 #include "FaceDetector.h"
 
-// std::string FaceLandmarkPose::convertNSStringToStdString(NSString* nsString); 
-// {
-//     if (!nsString) {
-//         return std::string();
-//     }
+std::string FaceLandmarkPose::convertNSStringToStdString(NSString* nsString)
+{
+    if (!nsString) {
+        return std::string();
+    }
     
-//     const char* utf8String = [nsString UTF8String];
-//     if (!utf8String) {
-//         return std::string();
-//     }
+    const char* utf8String = [nsString UTF8String];
+    if (!utf8String) {
+        return std::string();
+    }
     
-//     return std::string(utf8String);
-// }
-
-std::string FaceLandmarkPose::convertNSStringToStdString(NSString* nsString) {
-    if (nsString == NULL) return std::string();
-    return std::string([nsString UTF8String]);
+    return std::string(utf8String);
 }
 
 FaceLandmarkPose::FaceLandmarkPose(bool useGPU)
@@ -32,9 +27,6 @@ FaceLandmarkPose::FaceLandmarkPose(bool useGPU)
     NSString *lmkBinPath = [[NSBundle mainBundle] pathForResource:@"pfld-sim" ofType:@"bin"];
     mFacialLandmarkDetector = new FacialLandmarkDetector(convertNSStringToStdString(lmkParamPath), convertNSStringToStdString(lmkBinPath), useGPU);
 }
-
-
-
 
 std::vector<FaceLandmarkPoseResult> FaceLandmarkPose::detect(UIImage *image){
     std::vector<FaceLandmarkPoseResult> final_results;
