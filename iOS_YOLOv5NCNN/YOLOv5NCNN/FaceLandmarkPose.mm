@@ -15,17 +15,65 @@ std::string FaceLandmarkPose::convertNSStringToStdString(NSString* nsString)
     return std::string(utf8String);
 }
 
-FaceLandmarkPose::FaceLandmarkPose(bool useGPU)
-{
-    NSString *faceParamPath = [[NSBundle mainBundle] pathForResource:@"face" ofType:@"param"];
-    NSString *faceBinPath = [[NSBundle mainBundle] pathForResource:@"face" ofType:@"bin"];
-    mFaceDetector = new FaceDetector(convertNSStringToStdString(faceParamPath), convertNSStringToStdString(faceBinPath), useGPU);
-    NSString *poseParamPath = [[NSBundle mainBundle] pathForResource:@"robust_alpha_opt" ofType:@"param"];
-    NSString *poseBinPath = [[NSBundle mainBundle] pathForResource:@"robust_alpha_opt" ofType:@"bin"];
-    mHeadPose = new HeadPose(convertNSStringToStdString(poseParamPath), convertNSStringToStdString(poseBinPath), useGPU);
-    NSString *lmkParamPath = [[NSBundle mainBundle] pathForResource:@"pfld-sim" ofType:@"param"];
-    NSString *lmkBinPath = [[NSBundle mainBundle] pathForResource:@"pfld-sim" ofType:@"bin"];
-    mFacialLandmarkDetector = new FacialLandmarkDetector(convertNSStringToStdString(lmkParamPath), convertNSStringToStdString(lmkBinPath), useGPU);
+bool FaceLandmarkPose::hasGPU = true;
+bool FaceLandmarkPose::toUseGPU = true;
+FaceLandmarkPose *FaceLandmarkPose::detector = nullptr;
+
+FaceLandmarkPose::FaceLandmarkPose(bool useGPU) {
+    // NSString *faceParamPath = [[NSBundle mainBundle] pathForResource:@"face" ofType:@"param"];
+    // NSString *faceBinPath = [[NSBundle mainBundle] pathForResource:@"face" ofType:@"bin"];
+    // mFaceDetector = new FaceDetector(convertNSStringToStdString(faceParamPath), convertNSStringToStdString(faceBinPath), useGPU);
+    // NSString *poseParamPath = [[NSBundle mainBundle] pathForResource:@"robust_alpha_opt" ofType:@"param"];
+    // NSString *poseBinPath = [[NSBundle mainBundle] pathForResource:@"robust_alpha_opt" ofType:@"bin"];
+    // mHeadPose = new HeadPose(convertNSStringToStdString(poseParamPath), convertNSStringToStdString(poseBinPath), useGPU);
+    // NSString *lmkParamPath = [[NSBundle mainBundle] pathForResource:@"pfld-sim" ofType:@"param"];
+    // NSString *lmkBinPath = [[NSBundle mainBundle] pathForResource:@"pfld-sim" ofType:@"bin"];
+    // mFacialLandmarkDetector = new FacialLandmarkDetector(convertNSStringToStdString(lmkParamPath), convertNSStringToStdString(lmkBinPath), useGPU);
+#if NCNN_VULKAN
+    ncnn::create_gpu_instance();
+    hasGPU = ncnn::get_gpu_count() > 0;
+#endif
+    toUseGPU = hasGPU && useGPU;
+    
+    FaceNet = new ncnn::Net();
+    FaceNet->opt.use_vulkan_compute = toUseGPU;
+    FaceNet->opt.use_fp16_arithmetic = true;
+    NSString *parmaPath = [[NSBundle mainBundle] pathForResource:@"face" ofType:@"param"];
+    NSString *binPath = [[NSBundle mainBundle] pathForResource:@"face" ofType:@"bin"];
+
+    int rp = FaceNet->load_param([parmaPath UTF8String]);
+    int rm = FaceNet->load_model([binPath UTF8String]);
+    if (rp == 0 && rm == 0) {
+        printf("net load param and model face net success!\n");
+    } else {
+        fprintf(stderr, "net load fail face net,param:%d model:%d", rp, rm);
+    }
+    
+    RobustAlphaNet = new ncnn::Net();
+    RobustAlphaNet->opt.use_vulkan_compute = toUseGPU;
+    RobustAlphaNet->opt.use_fp16_arithmetic = true;
+    parmaPath = [[NSBundle mainBundle] pathForResource:@"robust_alpha_opt" ofType:@"param"];
+    binPath = [[NSBundle mainBundle] pathForResource:@"robust_alpha_opt" ofType:@"bin"];
+    rp = RobustAlphaNet->load_param([parmaPath UTF8String]);
+    rm = RobustAlphaNet->load_model([binPath UTF8String]);
+    if (rp == 0 && rm == 0) {
+        printf("net load param and model robust alpha net success!\n");
+    } else {
+        fprintf(stderr, "net load fail robust alpha net,param:%d model:%d", rp, rm);
+    }
+
+    PFLDSimNet = new ncnn::Net();
+    PFLDSimNet->opt.use_vulkan_compute = toUseGPU;
+    PFLDSimNet->opt.use_fp16_arithmetic = true;
+    parmaPath = [[NSBundle mainBundle] pathForResource:@"pfld-sim" ofType:@"param"];
+    binPath = [[NSBundle mainBundle] pathForResource:@"pfld-sim" ofType:@"bin"];
+    rp = PFLDSimNet->load_param([parmaPath UTF8String]);
+    rm = PFLDSimNet->load_model([binPath UTF8String]);
+    if (rp == 0 && rm == 0) {
+        printf("net load param and model pfld sim net success!\n");
+    } else {
+        fprintf(stderr, "net load fail pfld sim net,param:%d model:%d", rp, rm);
+    }
 }
 
 std::vector<FaceLandmarkPoseResult> FaceLandmarkPose::detect(UIImage *image){

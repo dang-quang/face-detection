@@ -24,8 +24,15 @@ private:
     FaceDetector* mFaceDetector;
     HeadPose* mHeadPose;
     FacialLandmarkDetector* mFacialLandmarkDetector;
+    ncnn::Net *FaceNet;
+    ncnn::Net *RobustAlphaNet;
+    ncnn::Net *PFLDSimNet;
     static std::string convertNSStringToStdString(NSString* nsString);
     void drawResults(cv::Mat& image, bbox& box,PoseValue& pose_data, ScaleInfo& scale_data, LandmarkResult& lmk_data);
     void draw_axis(cv::Mat& img, float yaw, float pitch, float roll, int tdx, int tdy, int size);
+public:
+    static FaceLandmarkPose *detector;
+    static bool hasGPU;
+    static bool toUseGPU;
 };
 #endif //FACE_LANDMARK_POSE_H

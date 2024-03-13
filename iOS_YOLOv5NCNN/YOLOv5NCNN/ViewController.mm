@@ -333,7 +333,7 @@
         dbFaceResult = self.dbFace->detect(image, self.threshold, self.nms_threshold);
     } else if (self.USE_MODEL == W_FACE_LANDMARK) {
         //faceLandmarkResult = self.faceLandmark->detect(image);
-        NSLog(@"quang debug 1234 ==========>");
+        NSLog(@"detect model face landmark pose ==========>");
         faceLandmarkPoseResult = self.faceLandmarkPose->detect(image);
     } else if (self.USE_MODEL == W_YOLACT) {
         yolactResult = self.yolact->detect_yolact(image);

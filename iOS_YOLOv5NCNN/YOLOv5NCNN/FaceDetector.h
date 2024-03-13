@@ -44,10 +44,11 @@ private:
 
     void nms(std::vector<bbox> &input_boxes, float NMS_THRESH);
 
-    int MAXSIZE = 320;
+    //int MAXSIZE = 320;
 public:
     static FaceDetector *detector;
     static bool hasGPU;
     static bool toUseGPU;
+    static int MAXSIZE;
 };
 #endif //FACE_DETECTOR_H

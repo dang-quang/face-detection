@@ -53,7 +53,7 @@ void FaceDetector::Init(const std::string &model_param, const std::string &model
 
 void FaceDetector::Detect(cv::Mat& image, std::vector<bbox>& boxes)
 {
-
+    int MAXSIZE = 320;
     float long_side = std::max(image.cols, image.rows);
     float scale = MAXSIZE / long_side;
     cv::Mat img_scale;
