@@ -6,9 +6,9 @@ bool FaceDetector::toUseGPU = true;
 FaceDetector::FaceDetector():
         _nms(0.4),
         _threshold(0.6),
-        _mean_val{104.f, 117.f, 123.f},
         _retinaface(false),
         Net(new ncnn::Net())
+        //_mean_val{104.f, 117.f, 123.f},
 {
 }
 
@@ -29,9 +29,6 @@ FaceDetector::FaceDetector(const std::string &model_param, const std::string &mo
     _nms = 0.4;
     _threshold = 0.6;
     //_mean_val = {104.f, 117.f, 123.f};
-    _mean_val[0] = 1.0f;
-    _mean_val[1] = 2.0f;
-    _mean_val[2] = 3.0f;
     _retinaface = false;
 #if NCNN_VULKAN
     ncnn::create_gpu_instance();
@@ -54,6 +51,7 @@ void FaceDetector::Init(const std::string &model_param, const std::string &model
 void FaceDetector::Detect(cv::Mat& image, std::vector<bbox>& boxes)
 {
     int MAXSIZE = 320;
+    //float mean_val[3] = {104.f, 117.f, 123.f};
     float long_side = std::max(image.cols, image.rows);
     float scale = MAXSIZE / long_side;
     cv::Mat img_scale;
@@ -63,11 +61,15 @@ void FaceDetector::Detect(cv::Mat& image, std::vector<bbox>& boxes)
     img_scale.copyTo(img_padding(r));
     
     ncnn::Mat in = ncnn::Mat::from_pixels(img_padding.data, ncnn::Mat::PIXEL_BGR, img_padding.cols, img_padding.rows);
-    in.substract_mean_normalize(_mean_val, 0);
+
+    float norm[3] = {1 / 255.f, 1 / 255.f, 1 / 255.f};
+    float mean[3] = {0, 0, 0}; 
+    in.substract_mean_normalize(mean, norm);
 
     ncnn::Extractor ex = Net->create_extractor();
     ex.set_light_mode(true);
     ex.set_num_threads(4);
+    
 #if NCNN_VULKAN
     if (toUseGPU) {  // 消除提示
         ex.set_vulkan_compute(toUseGPU);

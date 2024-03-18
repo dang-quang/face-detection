@@ -19,6 +19,7 @@ public:
     FaceLandmarkPose(bool useGPU);
     ~FaceLandmarkPose();
     std::vector<FaceLandmarkPoseResult> detect(UIImage *image);
+    UIImage *resizeImage(UIImage *image, CGFloat width, CGFloat height);
 
 private:
     FaceDetector* mFaceDetector;

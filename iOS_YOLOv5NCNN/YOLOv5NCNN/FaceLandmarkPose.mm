@@ -20,15 +20,9 @@ bool FaceLandmarkPose::toUseGPU = true;
 FaceLandmarkPose *FaceLandmarkPose::detector = nullptr;
 
 FaceLandmarkPose::FaceLandmarkPose(bool useGPU) {
-    // NSString *faceParamPath = [[NSBundle mainBundle] pathForResource:@"face" ofType:@"param"];
-    // NSString *faceBinPath = [[NSBundle mainBundle] pathForResource:@"face" ofType:@"bin"];
-    // mFaceDetector = new FaceDetector(convertNSStringToStdString(faceParamPath), convertNSStringToStdString(faceBinPath), useGPU);
-    // NSString *poseParamPath = [[NSBundle mainBundle] pathForResource:@"robust_alpha_opt" ofType:@"param"];
-    // NSString *poseBinPath = [[NSBundle mainBundle] pathForResource:@"robust_alpha_opt" ofType:@"bin"];
-    // mHeadPose = new HeadPose(convertNSStringToStdString(poseParamPath), convertNSStringToStdString(poseBinPath), useGPU);
-    // NSString *lmkParamPath = [[NSBundle mainBundle] pathForResource:@"pfld-sim" ofType:@"param"];
-    // NSString *lmkBinPath = [[NSBundle mainBundle] pathForResource:@"pfld-sim" ofType:@"bin"];
-    // mFacialLandmarkDetector = new FacialLandmarkDetector(convertNSStringToStdString(lmkParamPath), convertNSStringToStdString(lmkBinPath), useGPU);
+    mFaceDetector = new FaceDetector();
+    mHeadPose = new HeadPose();
+    mFacialLandmarkDetector = new FacialLandmarkDetector();
 #if NCNN_VULKAN
     ncnn::create_gpu_instance();
     hasGPU = ncnn::get_gpu_count() > 0;
@@ -81,16 +75,20 @@ std::vector<FaceLandmarkPoseResult> FaceLandmarkPose::detect(UIImage *image){
 
     int img_w = image.size.width;
     int img_h = image.size.height;
+    int target_w = 300;
+    int target_h = 300;
     unsigned char* rgba = new unsigned char[img_w * img_h * 4];
     CGColorSpaceRef colorSpace = CGImageGetColorSpace(image.CGImage);
     CGContextRef contextRef = CGBitmapContextCreate(rgba, img_w, img_h, 8, img_w * 4, colorSpace, kCGImageAlphaNoneSkipLast | kCGBitmapByteOrderDefault);
     CGContextDrawImage(contextRef, CGRectMake(0, 0, img_w, img_h), image.CGImage);
     CGContextRelease(contextRef);
-    ncnn::Mat src_img = ncnn::Mat::from_pixels_resize(rgba, ncnn::Mat::PIXEL_RGBA2RGB, img_w, img_h, img_w, img_h);
+    ncnn::Mat src_img = ncnn::Mat::from_pixels_resize(rgba, ncnn::Mat::PIXEL_RGBA2RGB, img_w, img_h, target_w, target_h);
     cv::Mat cv_image(src_img.h, src_img.w, CV_8UC3);
     src_img.to_pixels(cv_image.data, ncnn::Mat::PIXEL_RGB2BGR);
+    
     std::vector<bbox> face_results;
     mFaceDetector->Detect(cv_image,face_results);
+    delete[] rgba;
     for (int i = 0; i < face_results.size(); i++)
     {
         PoseValue pose_data;
